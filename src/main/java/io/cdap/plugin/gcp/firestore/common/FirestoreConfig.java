@@ -20,6 +20,7 @@ import javax.annotation.Nullable;
 public class FirestoreConfig extends PluginConfig {
   public static final String NAME_PROJECT = "project";
   public static final String NAME_SERVICE_ACCOUNT_TYPE = "serviceAccountType";
+  public static final String NAME_DATABASE = "databaseName";
   public static final String NAME_SERVICE_ACCOUNT_FILE_PATH = "serviceFilePath";
   public static final String NAME_SERVICE_ACCOUNT_JSON = "serviceAccountJSON";
   public static final String AUTO_DETECT = "auto-detect";
@@ -37,26 +38,38 @@ public class FirestoreConfig extends PluginConfig {
   @Nullable
   protected String project;
 
+  @Name(NAME_DATABASE)
+  @Description("Name of the Firestore Database. "
+    + "If not specified, it will use '(default)'.")
+  @Macro
+  protected String databaseName;
+
   @Name(NAME_SERVICE_ACCOUNT_TYPE)
   @Description("Service account type, file path where the service account is located or the JSON content of the " +
     "service account.")
-  @Macro
-  @Nullable
   protected String serviceAccountType;
 
   @Name(NAME_SERVICE_ACCOUNT_FILE_PATH)
   @Description("Path on the local file system of the service account key used "
     + "for authorization. Can be set to 'auto-detect' when running on a Dataproc cluster. "
     + "When running on other clusters, the file must be present on every node in the cluster.")
-  @Macro
   @Nullable
   protected String serviceFilePath;
 
   @Name(NAME_SERVICE_ACCOUNT_JSON)
   @Description("Content of the service account file.")
-  @Macro
   @Nullable
   protected String serviceAccountJson;
+
+  @Name(SERVICE_ACCOUNT_FILE_PATH)
+  @Description("File path of the Service Account JSON file.")
+  @Nullable
+  protected String serviceAccountFilePath;
+
+  @Name(SERVICE_ACCOUNT_JSON)
+  @Description("Service Account JSON")
+  @Nullable
+  protected String serviceAccountJsonContent;
 
   public String getProject() {
     String projectId = tryGetProject();
@@ -127,6 +140,13 @@ public class FirestoreConfig extends PluginConfig {
    */
   public void validate(FailureCollector collector) {
     IdUtils.validateReferenceName(referenceName, collector);
+  }
+
+  public String getDatabaseName() {
+    if (containsMacro(NAME_DATABASE) && Strings.isNullOrEmpty(databaseName)) {
+      return "(default)";
+    }
+    return databaseName;
   }
 
   public String getReferenceName() {

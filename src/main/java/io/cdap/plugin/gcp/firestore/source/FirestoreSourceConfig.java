@@ -34,6 +34,7 @@ import io.cdap.plugin.gcp.firestore.source.util.FirestoreSourceConstants;
 import io.cdap.plugin.gcp.firestore.source.util.SourceQueryMode;
 import io.cdap.plugin.gcp.firestore.util.FirestoreConstants;
 import io.cdap.plugin.gcp.firestore.util.FirestoreUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -243,7 +244,7 @@ public class FirestoreSourceConfig extends FirestoreConfig {
     }
     Firestore db = null;
     try {
-      db = FirestoreUtil.getFirestore(getServiceAccountFilePath(), getProject());
+      db = FirestoreUtil.getFirestore(getServiceAccount(), isServiceAccountFilePath(), getProject(), getDatabaseName());
 
       if (db != null) {
         db.close();

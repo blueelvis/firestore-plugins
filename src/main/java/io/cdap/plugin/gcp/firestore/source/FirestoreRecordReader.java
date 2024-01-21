@@ -22,7 +22,10 @@ import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
+
 import io.cdap.plugin.gcp.firestore.common.FirestoreConfig;
+import io.cdap.plugin.gcp.firestore.exception.FirestoreInitializationException;
 import io.cdap.plugin.gcp.firestore.source.util.FilterInfo;
 import io.cdap.plugin.gcp.firestore.source.util.FilterInfoParser;
 import io.cdap.plugin.gcp.firestore.source.util.FirestoreQueryBuilder;
@@ -65,8 +68,27 @@ public class FirestoreRecordReader extends RecordReader<Object, QueryDocumentSna
 
     conf = taskAttemptContext.getConfiguration();
     String projectId = conf.get(FirestoreConfig.NAME_PROJECT);
+    String databaseId = conf.get(FirestoreConfig.NAME_DATABASE);
+    Boolean isServiceAccountFilePath = false;
+    String serviceAccountJson = conf.get(FirestoreConfig.NAME_SERVICE_ACCOUNT_JSON);
     String serviceAccountFilePath = conf.get(FirestoreConfig.NAME_SERVICE_ACCOUNT_FILE_PATH);
-    String collection = conf.get(FirestoreConstants.PROPERTY_COLLECTION);
+    String collection = Strings.nullToEmpty(conf.get(FirestoreConstants.PROPERTY_COLLECTION)).trim();
+    // Get Service Account whether JSON or FilePath
+    String serviceAccountType = conf.get(FirestoreConfig.NAME_SERVICE_ACCOUNT_TYPE);
+
+    LOG.debug("Initialize RecordReader(projectId={}, databaseId={}, collection={}, serviceAccountType={}, isServiceAccountFilePath={}, serviceFilePath={}, " +
+    "serviceAccountJson={}", projectId, databaseId, collection, serviceAccountType, isServiceAccountFilePath, serviceAccountFilePath, serviceAccountJson);
+    String serviceAccount = "";
+    if(serviceAccountType.equalsIgnoreCase("FilePath")) {
+      serviceAccount = conf.get(FirestoreConfig.NAME_SERVICE_ACCOUNT_FILE_PATH);
+      isServiceAccountFilePath = true;
+    } else if(serviceAccountType.equalsIgnoreCase("json")) {
+      serviceAccount = conf.get(FirestoreConfig.NAME_SERVICE_ACCOUNT_JSON);
+      isServiceAccountFilePath = false;
+    } else {
+      throw new FirestoreInitializationException("Service account type can only be either a File Path or JSON.");
+    }
+
     List<String> fields = Splitter.on(',').trimResults()
       .splitToList(conf.get(FirestoreSourceConstants.PROPERTY_SCHEMA, ""));
     List<String> pullDocuments = Splitter.on(',').trimResults().omitEmptyStrings()
@@ -75,7 +97,7 @@ public class FirestoreRecordReader extends RecordReader<Object, QueryDocumentSna
       .splitToList(conf.get(FirestoreSourceConstants.PROPERTY_SKIP_DOCUMENTS, ""));
     String customQuery = conf.get(FirestoreSourceConstants.PROPERTY_CUSTOM_QUERY, "");
 
-    db = FirestoreUtil.getFirestore(serviceAccountFilePath, projectId);
+    db = FirestoreUtil.getFirestore(serviceAccount, isServiceAccountFilePath, projectId, databaseId);
 
     try {
       List<FilterInfo> filters = getParsedFilters(customQuery);

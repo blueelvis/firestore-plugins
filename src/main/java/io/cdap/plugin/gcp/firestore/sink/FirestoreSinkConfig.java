@@ -164,7 +164,7 @@ public class FirestoreSinkConfig extends FirestoreConfig {
       return;
     }
     try {
-      Firestore db = FirestoreUtil.getFirestore(getServiceAccountFilePath(), getProject());
+      Firestore db = FirestoreUtil.getFirestore(getServiceAccount(), isServiceAccountFilePath(), getProject(), getDatabaseName());
       db.close();
     } catch (Exception e) {
       collector.addFailure(e.getMessage(), "Ensure properties like project, service account " +
