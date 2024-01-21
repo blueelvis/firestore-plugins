@@ -33,6 +33,7 @@ import io.cdap.plugin.gcp.firestore.util.FirestoreUtil;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import javax.annotation.Nullable;
 
 /**
@@ -75,17 +76,19 @@ public class FirestoreSinkConfig extends FirestoreConfig {
    * @param referenceName the reference name
    * @param project the project id
    * @param serviceFilePath the service file path
+   * @param databaseName the name of the database
    * @param collection the collection
    * @param idType the id type
    * @param idAlias the id alias
    * @param batchSize the batch size
    */
   @VisibleForTesting
-  public FirestoreSinkConfig(String referenceName, String project, String serviceFilePath,
+  public FirestoreSinkConfig(String referenceName, String project, String serviceFilePath, String databaseName,
                              String collection, String idType, String idAlias, int batchSize) {
     this.referenceName = referenceName;
     this.project = project;
     this.serviceFilePath = serviceFilePath;
+    this.databaseName = databaseName;
     this.collection = collection;
     this.idType = idType;
     this.idAlias = idAlias;
@@ -151,6 +154,7 @@ public class FirestoreSinkConfig extends FirestoreConfig {
 
     validateBatchSize(collector);
     validateFirestoreConnection(collector);
+    validateDatabaseName(collector);
 
     if (schema != null) {
       validateSchema(schema, collector);
@@ -164,13 +168,15 @@ public class FirestoreSinkConfig extends FirestoreConfig {
       return;
     }
     try {
-      Firestore db = FirestoreUtil.getFirestore(getServiceAccountFilePath(), getProject());
+      Firestore db = FirestoreUtil.getFirestore(getServiceAccount(), isServiceAccountFilePath(),
+       getProject(), getDatabaseName());
       db.close();
     } catch (Exception e) {
       collector.addFailure(e.getMessage(), "Ensure properties like project, service account " +
-        "file path are correct.")
+        "file path, database name are correct.")
         .withConfigProperty(NAME_SERVICE_ACCOUNT_FILE_PATH)
         .withConfigProperty(NAME_PROJECT)
+        .withConfigProperty(NAME_DATABASE)
         .withStacktrace(e.getStackTrace());
     }
   }
@@ -185,7 +191,7 @@ public class FirestoreSinkConfig extends FirestoreConfig {
   }
 
   /**
-   * Validates given field schema to be complaint with Firestore types.
+   * Validates given field schema to be compliant with Firestore types.
    * Will throw {@link IllegalArgumentException} if schema contains unsupported type.
    *
    * @param fieldName field name
@@ -259,6 +265,71 @@ public class FirestoreSinkConfig extends FirestoreConfig {
         String.format("Id field '%s' is of unsupported type '%s'", idAlias, fieldSchema.getDisplayName()),
         "Ensure the type is non-nullable string")
         .withConfigProperty(FirestoreSinkConstants.PROPERTY_ID_ALIAS).withInputSchemaField(idAlias);
+    }
+  }
+
+  /**
+   * Validates the given database name to consists of characters allowed to represent a dataset.
+   */
+  public void validateDatabaseName(FailureCollector collector) {
+    if (containsMacro(FirestoreConfig.NAME_DATABASE)) {
+      return;
+    }
+
+    String databaseName = getDatabaseName();
+
+    // Check if the database name is empty or null.
+    if (Strings.isNullOrEmpty(databaseName)) {
+      collector.addFailure("Database Name must be specified.", null)
+          .withConfigProperty(FirestoreConfig.NAME_DATABASE);
+    }
+
+    // Check if database name contains the (default)
+    if (databaseName != "(default)") {
+
+      // Ensure database name includes only letters, numbers, and hyphen (-)
+      // characters.
+      if (!databaseName.matches("^[a-zA-Z0-9-]+$")) {
+        collector.addFailure("Database name can only include letters, numbers and hyphen characters.", null)
+            .withConfigProperty(FirestoreConfig.NAME_DATABASE);
+      }
+
+      // Ensure database name is in lower case.
+      if (databaseName != databaseName.toLowerCase()) {
+        collector.addFailure("Database name must be in lowercase.", null)
+            .withConfigProperty(FirestoreConfig.NAME_DATABASE);
+      }
+
+      // The first character must be a letter.
+      if (!databaseName.matches("^[a-zA-Z][a-zA-Z0-9-]*$")) {
+        collector.addFailure("Database name's first character can only be an alphabet.", null)
+            .withConfigProperty(FirestoreConfig.NAME_DATABASE);
+      }
+
+      // The last character must be a letter or number.
+      if (!databaseName.matches("^[a-zA-Z][a-zA-Z0-9-]*$")) {
+        collector.addFailure("Database name's first character can only be an alphabet.", null)
+            .withConfigProperty(FirestoreConfig.NAME_DATABASE);
+      }
+
+      // Minimum of 4 characters.
+      if (databaseName.length() < 4) {
+        collector.addFailure("Database name should be at least 4 letters.", null)
+            .withConfigProperty(FirestoreConfig.NAME_DATABASE);
+      }
+
+      // Maximum of 63 characters.
+      if (databaseName.length() > 63) {
+        collector.addFailure("Database name cannot be more than 63 characters.", null)
+            .withConfigProperty(FirestoreConfig.NAME_DATABASE);
+      }
+
+      // Should not be a UUID.
+      try {
+        UUID.fromString(databaseName);
+        collector.addFailure("Database name cannot contain a UUID.", null)
+            .withConfigProperty(FirestoreConfig.NAME_DATABASE);
+      } catch (IllegalArgumentException e) { }
     }
   }
 
