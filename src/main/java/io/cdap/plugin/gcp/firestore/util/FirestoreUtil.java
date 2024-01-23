@@ -15,10 +15,7 @@
  */
 
 package io.cdap.plugin.gcp.firestore.util;
-import com.google.api.client.auth.oauth2.Credential;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.FirestoreOptions;
 import com.google.common.base.Strings;

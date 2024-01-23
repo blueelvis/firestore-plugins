@@ -42,11 +42,13 @@ public class FirestoreConfig extends PluginConfig {
   @Description("Name of the Firestore Database. "
     + "If not specified, it will use '(default)'.")
   @Macro
+  @Nullable
   protected String databaseName;
 
   @Name(NAME_SERVICE_ACCOUNT_TYPE)
   @Description("Service account type, file path where the service account is located or the JSON content of the " +
     "service account.")
+  @Macro
   protected String serviceAccountType;
 
   @Name(NAME_SERVICE_ACCOUNT_FILE_PATH)
@@ -54,22 +56,14 @@ public class FirestoreConfig extends PluginConfig {
     + "for authorization. Can be set to 'auto-detect' when running on a Dataproc cluster. "
     + "When running on other clusters, the file must be present on every node in the cluster.")
   @Nullable
+  @Macro
   protected String serviceFilePath;
 
   @Name(NAME_SERVICE_ACCOUNT_JSON)
   @Description("Content of the service account file.")
   @Nullable
+  @Macro
   protected String serviceAccountJson;
-
-  @Name(SERVICE_ACCOUNT_FILE_PATH)
-  @Description("File path of the Service Account JSON file.")
-  @Nullable
-  protected String serviceAccountFilePath;
-
-  @Name(SERVICE_ACCOUNT_JSON)
-  @Description("Service Account JSON")
-  @Nullable
-  protected String serviceAccountJsonContent;
 
   public String getProject() {
     String projectId = tryGetProject();
@@ -144,6 +138,9 @@ public class FirestoreConfig extends PluginConfig {
 
   public String getDatabaseName() {
     if (containsMacro(NAME_DATABASE) && Strings.isNullOrEmpty(databaseName)) {
+      return null;
+    }
+    else if(Strings.isNullOrEmpty(databaseName)) {
       return "(default)";
     }
     return databaseName;

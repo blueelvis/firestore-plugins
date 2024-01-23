@@ -17,6 +17,14 @@
         },
         {
           "widget-type": "textbox",
+          "label": "Database Name/ID",
+          "name": "databaseName",
+          "widget-attributes": {
+            "placeholder": "Name of the Database. If not specified, will use '(default)'"
+          }
+        },
+        {
+          "widget-type": "textbox",
           "label": "Collection",
           "name": "collection"
         },
