@@ -35,7 +35,7 @@ public class FirestoreSinkConfigHelper {
     private String referenceName = TEST_REF_NAME;
     private String project = TEST_PROJECT;
     private String serviceFilePath = "/path/to/file";
-    private String database = TEST_DATABASE;
+    private String databaseName = TEST_DATABASE;
     private String collection = TEST_COLLECTION;
     private String idType;
     private String idAlias;
@@ -57,7 +57,7 @@ public class FirestoreSinkConfigHelper {
     }
 
     public ConfigBuilder setDatabase(String database) {
-      this.database = database;
+      this.databaseName = database;
       return this;
     }
 
@@ -82,7 +82,7 @@ public class FirestoreSinkConfigHelper {
     }
 
     public FirestoreSinkConfig build() {
-      return new FirestoreSinkConfig(referenceName, project, serviceFilePath, collection, idType, idAlias,
+      return new FirestoreSinkConfig(referenceName, project, serviceFilePath, databaseName, collection, idType, idAlias,
         batchSize);
     }
   }

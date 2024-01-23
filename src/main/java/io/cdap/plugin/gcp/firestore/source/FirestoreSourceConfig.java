@@ -108,6 +108,7 @@ public class FirestoreSourceConfig extends FirestoreConfig {
    * @param referenceName the reference name
    * @param project the project id
    * @param serviceFilePath the service file path
+   * @param databaseName the name of the database
    * @param collection the collection id
    * @param queryMode the query mode (basic or advanced)
    * @param pullDocuments the list of documents to pull
@@ -118,12 +119,13 @@ public class FirestoreSourceConfig extends FirestoreConfig {
    * @param schema the schema
    */
   public FirestoreSourceConfig(
-      String referenceName, String project, String serviceFilePath, String collection,
+      String referenceName, String project, String serviceFilePath, String databaseName, String collection,
       String queryMode, String pullDocuments, String skipDocuments, String filters,
       String includeDocumentId, String idAlias, String schema) {
     this.referenceName = referenceName;
     this.project = project;
     this.serviceFilePath = serviceFilePath;
+    this.databaseName = databaseName;
     this.collection = collection;
     this.queryMode = queryMode;
     this.pullDocuments = pullDocuments;
@@ -223,6 +225,7 @@ public class FirestoreSourceConfig extends FirestoreConfig {
   public void validate(FailureCollector collector) {
     super.validate(collector);
     validateFirestoreConnection(collector);
+    validateDatabaseName(collector);
     validateCollection(collector);
     validateDocumentLists(collector);
     validateFilters(collector);
@@ -251,18 +254,21 @@ public class FirestoreSourceConfig extends FirestoreConfig {
       }
     } catch (FirestoreInitializationException e) {
       collector.addFailure(e.getMessage(), "Ensure properties like project, service account " +
-        "file path are correct.")
+        "file path, database name are correct.")
         .withConfigProperty(NAME_SERVICE_ACCOUNT_FILE_PATH)
         .withConfigProperty(NAME_PROJECT)
+        .withConfigProperty(NAME_DATABASE)
         .withStacktrace(e.getStackTrace());
     } catch (IllegalArgumentException e) {
-      collector.addFailure(e.getMessage(), "Ensure collection name exists in Firestore.")
+      collector.addFailure(e.getMessage(), "Ensure database name & collection name exists in Firestore.")
         .withConfigProperty(FirestoreConstants.PROPERTY_COLLECTION)
+        .withConfigProperty(FirestoreConfig.NAME_DATABASE)
         .withStacktrace(e.getStackTrace());
     } catch (Exception e) {
-      collector.addFailure("Error while connecting to Firestoe - " + e.getMessage(),
+      collector.addFailure("Error while connecting to Firestore - " + e.getMessage(),
           "Ensure Firestore connection params are correct.")
           .withConfigProperty(FirestoreConstants.PROPERTY_COLLECTION)
+          .withConfigProperty(FirestoreConfig.NAME_DATABASE)
           .withStacktrace(e.getStackTrace());
       LOG.error("Error", e);
     }
@@ -270,7 +276,7 @@ public class FirestoreSourceConfig extends FirestoreConfig {
   }
 
   /**
-   * Validates the given referenceName to consists of characters allowed to represent a dataset.
+   * Validates the given collection name to consists of characters allowed to represent a dataset.
    */
   public void validateCollection(FailureCollector collector) {
     if (containsMacro(FirestoreConstants.PROPERTY_COLLECTION)) {
@@ -280,6 +286,20 @@ public class FirestoreSourceConfig extends FirestoreConfig {
     if (Strings.isNullOrEmpty(getCollection())) {
       collector.addFailure("Collection must be specified.", null)
         .withConfigProperty(FirestoreConstants.PROPERTY_COLLECTION);
+    }
+  }
+
+  /**
+   * Validates the given database name to consists of characters allowed to represent a dataset.
+   */
+  public void validateDatabaseName(FailureCollector collector) {
+    if (containsMacro(FirestoreConfig.NAME_DATABASE)) {
+      return;
+    }
+
+    if (Strings.isNullOrEmpty(getDatabaseName())) {
+      collector.addFailure("Database Name must be specified.", null)
+        .withConfigProperty(FirestoreConfig.NAME_DATABASE);
     }
   }
 
@@ -365,7 +385,7 @@ public class FirestoreSourceConfig extends FirestoreConfig {
       tryGetProject() != null &&
       !autoServiceAccountUnavailable();
   }
-  
+
   private void validateDocumentLists(FailureCollector collector) {
     if (Strings.isNullOrEmpty(getPullDocuments()) ||
       Strings.isNullOrEmpty(getSkipDocuments()) ||

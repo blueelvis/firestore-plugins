@@ -48,6 +48,32 @@ public class FirestoreSourceConfigTest {
   }
 
   @Test
+  public void testValidateWithDatabase() {
+    MockFailureCollector collector = new MockFailureCollector();
+    FirestoreSourceConfig config = withFirestoreValidationMock(FirestoreSourceConfigHelper.newConfigBuilder()
+      .setCollection(FirestoreSourceConfigHelper.TEST_COLLECTION)
+      .setDatabase(FirestoreSourceConfigHelper.TEST_DATABASE)
+      .build(), collector);
+
+    config.validate(collector);
+    Assert.assertEquals(0, collector.getValidationFailures().size());
+    Assert.assertEquals(FirestoreSourceConfigHelper.TEST_DATABASE, config.getDatabaseName());
+  }
+
+  @Test
+  public void testValidateWithEmptyDatabase() {
+    MockFailureCollector collector = new MockFailureCollector();
+    FirestoreSourceConfig config = withFirestoreValidationMock(FirestoreSourceConfigHelper.newConfigBuilder()
+      .setCollection(FirestoreSourceConfigHelper.TEST_COLLECTION)
+      .setDatabase("")
+      .build(), collector);
+
+    config.validate(collector);
+    Assert.assertEquals(0, collector.getValidationFailures().size());
+    Assert.assertEquals("(default)", config.getDatabaseName());
+  }
+
+  @Test
   public void testValidateCollectionEmpty() {
     MockFailureCollector collector = new MockFailureCollector();
     FirestoreSourceConfig config = withFirestoreValidationMock(FirestoreSourceConfigHelper.newConfigBuilder()

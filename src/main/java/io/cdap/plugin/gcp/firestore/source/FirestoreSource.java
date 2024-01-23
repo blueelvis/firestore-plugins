@@ -178,10 +178,11 @@ public class FirestoreSource extends BatchSource<Object, QueryDocumentSnapshot, 
 
     } catch (Exception e) {
       collector.addFailure(e.getMessage(), "Ensure properties like project, service account " +
-        "file path, collection are correct.")
+        "file path, collection, database name are correct.")
         .withConfigProperty(FirestoreConfig.NAME_SERVICE_ACCOUNT_FILE_PATH)
         .withConfigProperty(FirestoreConfig.NAME_PROJECT)
         .withConfigProperty(FirestoreConstants.PROPERTY_COLLECTION)
+        .withConfigProperty(FirestoreConfig.NAME_DATABASE)
         .withStacktrace(e.getStackTrace());
       collector.getOrThrowException();
     }

@@ -75,17 +75,19 @@ public class FirestoreSinkConfig extends FirestoreConfig {
    * @param referenceName the reference name
    * @param project the project id
    * @param serviceFilePath the service file path
+   * @param databaseName the name of the database
    * @param collection the collection
    * @param idType the id type
    * @param idAlias the id alias
    * @param batchSize the batch size
    */
   @VisibleForTesting
-  public FirestoreSinkConfig(String referenceName, String project, String serviceFilePath,
+  public FirestoreSinkConfig(String referenceName, String project, String serviceFilePath, String databaseName,
                              String collection, String idType, String idAlias, int batchSize) {
     this.referenceName = referenceName;
     this.project = project;
     this.serviceFilePath = serviceFilePath;
+    this.databaseName = databaseName;
     this.collection = collection;
     this.idType = idType;
     this.idAlias = idAlias;
@@ -151,6 +153,7 @@ public class FirestoreSinkConfig extends FirestoreConfig {
 
     validateBatchSize(collector);
     validateFirestoreConnection(collector);
+    validateDatabaseName(collector);
 
     if (schema != null) {
       validateSchema(schema, collector);
@@ -168,9 +171,10 @@ public class FirestoreSinkConfig extends FirestoreConfig {
       db.close();
     } catch (Exception e) {
       collector.addFailure(e.getMessage(), "Ensure properties like project, service account " +
-        "file path are correct.")
+        "file path, database name are correct.")
         .withConfigProperty(NAME_SERVICE_ACCOUNT_FILE_PATH)
         .withConfigProperty(NAME_PROJECT)
+        .withConfigProperty(NAME_DATABASE)
         .withStacktrace(e.getStackTrace());
     }
   }
@@ -259,6 +263,20 @@ public class FirestoreSinkConfig extends FirestoreConfig {
         String.format("Id field '%s' is of unsupported type '%s'", idAlias, fieldSchema.getDisplayName()),
         "Ensure the type is non-nullable string")
         .withConfigProperty(FirestoreSinkConstants.PROPERTY_ID_ALIAS).withInputSchemaField(idAlias);
+    }
+  }
+
+  /**
+   * Validates the given database name to consists of characters allowed to represent a dataset.
+   */
+  public void validateDatabaseName(FailureCollector collector) {
+    if (containsMacro(FirestoreConfig.NAME_DATABASE)) {
+      return;
+    }
+
+    if (Strings.isNullOrEmpty(getDatabaseName())) {
+      collector.addFailure("Database Name must be specified.", null)
+        .withConfigProperty(FirestoreConfig.NAME_DATABASE);
     }
   }
 
