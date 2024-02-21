@@ -110,11 +110,13 @@ public class FirestoreConfig extends PluginConfig {
     return serviceAccountType;
   }
 
+  @Nullable
   public Boolean isServiceAccountJson() {
     String serviceAccountType = getServiceAccountType();
     return Strings.isNullOrEmpty(serviceAccountType) ? null : serviceAccountType.equals(SERVICE_ACCOUNT_JSON);
   }
 
+  @Nullable
   public Boolean isServiceAccountFilePath() {
     String serviceAccountType = getServiceAccountType();
     return Strings.isNullOrEmpty(serviceAccountType) ? null : serviceAccountType.equals(SERVICE_ACCOUNT_FILE_PATH);
@@ -140,7 +142,7 @@ public class FirestoreConfig extends PluginConfig {
     if (containsMacro(NAME_DATABASE) && Strings.isNullOrEmpty(databaseName)) {
       return null;
     }
-    else if(Strings.isNullOrEmpty(databaseName)) {
+    else if (Strings.isNullOrEmpty(databaseName)) {
       return "(default)";
     }
     return databaseName;

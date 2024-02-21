@@ -20,7 +20,8 @@
           "label": "Database Name/ID",
           "name": "databaseName",
           "widget-attributes": {
-            "placeholder": "Name of the Database. If not specified, will use '(default)'"
+            "placeholder": "Name of the Database. If not specified, will use '(default)'",
+            "default": "(default)"
           }
         },
         {
@@ -120,7 +121,7 @@
           }
         },
         {
-          "widget-type": "password",
+          "widget-type": "textbox",
           "label": "Service Account JSON",
           "name": "serviceAccountJSON"
         }

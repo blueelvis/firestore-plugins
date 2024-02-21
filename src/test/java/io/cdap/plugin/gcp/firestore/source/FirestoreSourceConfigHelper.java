@@ -23,7 +23,7 @@ public class FirestoreSourceConfigHelper {
 
   public static final String TEST_REF_NAME = "TestRefName";
   public static final String TEST_PROJECT = "test-project";
-  public static final String TEST_DATABASE = "TestDatabase";
+  public static final String TEST_DATABASE = "testdatabase";
   public static final String TEST_COLLECTION = "TestCollection";
 
   public static ConfigBuilder newConfigBuilder() {

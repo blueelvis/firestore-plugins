@@ -33,6 +33,8 @@ import io.cdap.plugin.gcp.firestore.util.FirestoreUtil;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 import javax.annotation.Nullable;
 
 /**
@@ -189,7 +191,7 @@ public class FirestoreSinkConfig extends FirestoreConfig {
   }
 
   /**
-   * Validates given field schema to be complaint with Firestore types.
+   * Validates given field schema to be compliant with Firestore types.
    * Will throw {@link IllegalArgumentException} if schema contains unsupported type.
    *
    * @param fieldName field name
@@ -274,9 +276,60 @@ public class FirestoreSinkConfig extends FirestoreConfig {
       return;
     }
 
-    if (Strings.isNullOrEmpty(getDatabaseName())) {
+    String databaseName = getDatabaseName();
+
+    // Check if the database name is empty or null.
+    if (Strings.isNullOrEmpty(databaseName)) {
       collector.addFailure("Database Name must be specified.", null)
-        .withConfigProperty(FirestoreConfig.NAME_DATABASE);
+          .withConfigProperty(FirestoreConfig.NAME_DATABASE);
+    }
+
+    // Check if database name contains the (default)
+    if (databaseName != "(default)") {
+
+      // Ensure database name includes only letters, numbers, and hyphen (-)
+      // characters.
+      if (!databaseName.matches("^[a-zA-Z0-9-]+$")) {
+        collector.addFailure("Database name can only include letters, numbers and hyphen characters.", null)
+            .withConfigProperty(FirestoreConfig.NAME_DATABASE);
+      }
+
+      // Ensure database name is in lower case.
+      if (databaseName != databaseName.toLowerCase()) {
+        collector.addFailure("Database name must be in lowercase.", null)
+            .withConfigProperty(FirestoreConfig.NAME_DATABASE);
+      }
+
+      // The first character must be a letter.
+      if (!databaseName.matches("^[a-zA-Z][a-zA-Z0-9-]*$")) {
+        collector.addFailure("Database name's first character can only be an alphabet.", null)
+            .withConfigProperty(FirestoreConfig.NAME_DATABASE);
+      }
+
+      // The last character must be a letter or number.
+      if (!databaseName.matches("^[a-zA-Z][a-zA-Z0-9-]*$")) {
+        collector.addFailure("Database name's first character can only be an alphabet.", null)
+            .withConfigProperty(FirestoreConfig.NAME_DATABASE);
+      }
+
+      // Minimum of 4 characters.
+      if (databaseName.length() < 4) {
+        collector.addFailure("Database name should be at least 4 letters.", null)
+            .withConfigProperty(FirestoreConfig.NAME_DATABASE);
+      }
+
+      // Maximum of 63 characters.
+      if (databaseName.length() > 63) {
+        collector.addFailure("Database name cannot be more than 63 characters.", null)
+            .withConfigProperty(FirestoreConfig.NAME_DATABASE);
+      }
+
+      // Should not be a UUID.
+      try {
+        UUID.fromString(databaseName);
+        collector.addFailure("Database name cannot contain a UUID.", null)
+            .withConfigProperty(FirestoreConfig.NAME_DATABASE);
+      } catch (IllegalArgumentException e) {}
     }
   }
 

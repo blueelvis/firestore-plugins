@@ -53,7 +53,7 @@ public class FirestoreUtil {
         .setProjectId(projectId)
         .setDatabaseId(databaseId);
 
-        LOG.debug("serviceAccount={}, isServiceAccountFilePath={}, project={}, databaseId={}...", serviceAccount, isServiceAccountFilePath, projectId, databaseId);
+        LOG.debug("isServiceAccountFilePath={}, project={}, databaseId={}...", isServiceAccountFilePath, projectId, databaseId);
 
         final GoogleCredentials credential = getCredential(serviceAccount, isServiceAccountFilePath);
 
