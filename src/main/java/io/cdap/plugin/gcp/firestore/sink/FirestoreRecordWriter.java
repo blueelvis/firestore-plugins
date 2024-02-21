@@ -24,6 +24,7 @@ import com.google.cloud.firestore.WriteBatch;
 import com.google.cloud.firestore.WriteResult;
 import com.google.common.base.Strings;
 import io.cdap.plugin.gcp.firestore.common.FirestoreConfig;
+import io.cdap.plugin.gcp.firestore.exception.FirestoreInitializationException;
 import io.cdap.plugin.gcp.firestore.sink.util.FirestoreSinkConstants;
 import io.cdap.plugin.gcp.firestore.util.FirestoreConstants;
 import io.cdap.plugin.gcp.firestore.util.FirestoreUtil;
@@ -58,14 +59,27 @@ public class FirestoreRecordWriter extends RecordWriter<NullWritable, Map<String
    */
   public FirestoreRecordWriter(TaskAttemptContext taskAttemptContext) {
     Configuration config = taskAttemptContext.getConfiguration();
-    FirestoreConfig firestoreConfig = new FirestoreConfig();
 
     String projectId = config.get(FirestoreConfig.NAME_PROJECT);
     String databaseId = config.get(FirestoreConfig.NAME_DATABASE);
 
-    String serviceAccountFilePath = firestoreConfig.getServiceAccountFilePath();
-    String serviceAccount = firestoreConfig.getServiceAccount();
-    Boolean isServiceAccountFilePath = firestoreConfig.isServiceAccountFilePath();
+    // Get Service Account
+    Boolean isServiceAccountFilePath = false;
+    String serviceAccountFilePath = config.get(FirestoreConfig.NAME_SERVICE_ACCOUNT_FILE_PATH);
+
+    // Get Service Account whether JSON or FilePath
+    String serviceAccountType = config.get(FirestoreConfig.NAME_SERVICE_ACCOUNT_TYPE);
+
+    String serviceAccount = "";
+    if(serviceAccountType.equalsIgnoreCase("FilePath")) {
+      serviceAccount = config.get(FirestoreConfig.NAME_SERVICE_ACCOUNT_FILE_PATH);
+      isServiceAccountFilePath = true;
+    } else if(serviceAccountType.equalsIgnoreCase("json")) {
+      serviceAccount = config.get(FirestoreConfig.NAME_SERVICE_ACCOUNT_JSON);
+      isServiceAccountFilePath = false;
+    } else {
+      throw new FirestoreInitializationException("Service account type can only be either a File Path or JSON.");
+    }
 
     String collection = Strings.nullToEmpty(config.get(FirestoreConstants.PROPERTY_COLLECTION)).trim();
 
