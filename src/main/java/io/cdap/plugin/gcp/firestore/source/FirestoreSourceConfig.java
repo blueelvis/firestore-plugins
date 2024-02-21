@@ -313,7 +313,7 @@ public class FirestoreSourceConfig extends FirestoreConfig {
     }
 
     // Check if database name contains the (default)
-    if (databaseName != FirestoreConstants.DEFAULT_DATABASE_NAME) {
+    if (!databaseName.equals(FirestoreConstants.DEFAULT_DATABASE_NAME)) {
 
       // Ensure database name includes only letters, numbers, and hyphen (-)
       // characters.
