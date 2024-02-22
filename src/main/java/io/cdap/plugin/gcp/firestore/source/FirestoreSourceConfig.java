@@ -61,7 +61,7 @@ public class FirestoreSourceConfig extends FirestoreConfig {
 
   @Name(FirestoreSourceConstants.PROPERTY_ID_ALIAS)
   @Description("Name of the field to set as the id field. This value is ignored if the `Include Document Id` is set to "
-      + "`false`. If no value is provided, `__id__` is used.")
+  + "`false`. If no value is provided, `__id__` is used.")
   @Macro
   @Nullable
   private String idAlias;
@@ -69,8 +69,8 @@ public class FirestoreSourceConfig extends FirestoreConfig {
   @Name(FirestoreSourceConstants.PROPERTY_QUERY_MODE)
   @Macro
   @Description("Mode of query. The mode can be one of two values: "
-      + "`Basic` - will allow user to specify documents to pull or skip, `Advanced` - will allow user to "
-      + "specify custom query.")
+  + "`Basic` - will allow user to specify documents to pull or skip, `Advanced` - will allow user to "
+  + "specify custom query.")
   private String queryMode;
 
   @Name(FirestoreSourceConstants.PROPERTY_PULL_DOCUMENTS)
@@ -89,12 +89,12 @@ public class FirestoreSourceConfig extends FirestoreConfig {
   @Macro
   @Nullable
   @Description("Specify the custom filter for fetching documents from Firestore Collection. " +
-      "Supported operators are, EqualTo, NumericEqualTo, LessThan, LessThanOrEqualTo, GreaterThan, " +
-      "GreaterThanOrEqualTo. A filter must specify the operator with field it should filter on as well the value. " +
-      "Filters are specified using syntax: \"value:operator(field)[,value:operator(field)]\". " +
-      "For example, 'CA:EqualTo(state),1000000:LessThan(population)' will apply two filters. " +
-      "The first will create a filter as state = 'CA'." +
-      "The second will create a filter as population < 1000000.")
+  "Supported operators are, EqualTo, NumericEqualTo, LessThan, LessThanOrEqualTo, GreaterThan, " +
+  "GreaterThanOrEqualTo. A filter must specify the operator with field it should filter on as well the value. " +
+  "Filters are specified using syntax: \"value:operator(field)[,value:operator(field)]\". " +
+  "For example, 'CA:EqualTo(state),1000000:LessThan(population)' will apply two filters. " +
+  "The first will create a filter as state = 'CA'." +
+  "The second will create a filter as population < 1000000.")
   private String filters;
 
   @Name(FirestoreSourceConstants.PROPERTY_SCHEMA)
@@ -157,8 +157,8 @@ public class FirestoreSourceConfig extends FirestoreConfig {
     }
 
     collector.addFailure("Unsupported query mode value: " + queryMode,
-        String.format("Supported modes are: %s", SourceQueryMode.getSupportedModes()))
-        .withConfigProperty(FirestoreSourceConstants.PROPERTY_QUERY_MODE);
+    String.format("Supported modes are: %s", SourceQueryMode.getSupportedModes()))
+      .withConfigProperty(FirestoreSourceConstants.PROPERTY_QUERY_MODE);
     collector.getOrThrowException();
     return null;
   }
@@ -212,7 +212,7 @@ public class FirestoreSourceConfig extends FirestoreConfig {
       return Schema.parseJson(schema);
     } catch (IOException e) {
       collector.addFailure("Invalid schema: " + e.getMessage(), null)
-          .withConfigProperty(FirestoreSourceConstants.PROPERTY_SCHEMA);
+        .withConfigProperty(FirestoreSourceConstants.PROPERTY_SCHEMA);
       // if there was an error that was added, it will throw an exception, otherwise,
       // this statement will
       // not be executed
@@ -256,22 +256,22 @@ public class FirestoreSourceConfig extends FirestoreConfig {
       }
     } catch (FirestoreInitializationException e) {
       collector.addFailure(e.getMessage(), "Ensure properties like project, service account " +
-          "file path, database name are correct.")
-          .withConfigProperty(NAME_SERVICE_ACCOUNT_FILE_PATH)
-          .withConfigProperty(NAME_PROJECT)
-          .withConfigProperty(NAME_DATABASE)
-          .withStacktrace(e.getStackTrace());
+        "file path, database name are correct.")
+        .withConfigProperty(NAME_SERVICE_ACCOUNT_FILE_PATH)
+        .withConfigProperty(NAME_PROJECT)
+        .withConfigProperty(NAME_DATABASE)
+        .withStacktrace(e.getStackTrace());
     } catch (IllegalArgumentException e) {
       collector.addFailure(e.getMessage(), "Ensure database name & collection name exists in Firestore.")
-          .withConfigProperty(FirestoreConstants.PROPERTY_COLLECTION)
-          .withConfigProperty(FirestoreConfig.NAME_DATABASE)
-          .withStacktrace(e.getStackTrace());
+        .withConfigProperty(FirestoreConstants.PROPERTY_COLLECTION)
+        .withConfigProperty(FirestoreConfig.NAME_DATABASE)
+        .withStacktrace(e.getStackTrace());
     } catch (Exception e) {
       collector.addFailure("Error while connecting to Firestore - " + e.getMessage(),
-          "Ensure Firestore connection params are correct.")
-          .withConfigProperty(FirestoreConstants.PROPERTY_COLLECTION)
-          .withConfigProperty(FirestoreConfig.NAME_DATABASE)
-          .withStacktrace(e.getStackTrace());
+        "Ensure Firestore connection params are correct.")
+        .withConfigProperty(FirestoreConstants.PROPERTY_COLLECTION)
+        .withConfigProperty(FirestoreConfig.NAME_DATABASE)
+        .withStacktrace(e.getStackTrace());
       LOG.error("Error", e);
     }
     collector.getOrThrowException();
@@ -288,7 +288,7 @@ public class FirestoreSourceConfig extends FirestoreConfig {
 
     if (Strings.isNullOrEmpty(getCollection())) {
       collector.addFailure("Collection must be specified.", null)
-          .withConfigProperty(FirestoreConstants.PROPERTY_COLLECTION);
+        .withConfigProperty(FirestoreConstants.PROPERTY_COLLECTION);
     }
   }
 
@@ -306,7 +306,7 @@ public class FirestoreSourceConfig extends FirestoreConfig {
     // Check if the database name is empty or null.
     if (Strings.isNullOrEmpty(databaseName)) {
       collector.addFailure("Database Name must be specified.", null)
-          .withConfigProperty(FirestoreConfig.NAME_DATABASE);
+        .withConfigProperty(FirestoreConfig.NAME_DATABASE);
     }
 
     // Check if database name contains the (default)
@@ -316,44 +316,44 @@ public class FirestoreSourceConfig extends FirestoreConfig {
       // characters.
       if (!databaseName.matches("^[a-zA-Z0-9-]+$")) {
         collector.addFailure("Database name can only include letters, numbers and hyphen characters.", null)
-            .withConfigProperty(FirestoreConfig.NAME_DATABASE);
+          .withConfigProperty(FirestoreConfig.NAME_DATABASE);
       }
 
       // Ensure database name is in lower case.
       if (databaseName != databaseName.toLowerCase()) {
         collector.addFailure("Database name must be in lowercase.", null)
-            .withConfigProperty(FirestoreConfig.NAME_DATABASE);
+          .withConfigProperty(FirestoreConfig.NAME_DATABASE);
       }
 
       // The first character must be a letter.
       if (!databaseName.matches("^[a-zA-Z].*")) {
         collector.addFailure("Database name's first character can only be an alphabet.", null)
-            .withConfigProperty(FirestoreConfig.NAME_DATABASE);
+          .withConfigProperty(FirestoreConfig.NAME_DATABASE);
       }
 
       // The last character must be a letter or number.
       if (!databaseName.matches(".*[a-zA-Z0-9]$")) {
         collector.addFailure("Database name's last character can only be a letter or a number.", null)
-            .withConfigProperty(FirestoreConfig.NAME_DATABASE);
+          .withConfigProperty(FirestoreConfig.NAME_DATABASE);
       }
 
       // Minimum of 4 characters.
       if (databaseName.length() < 4) {
         collector.addFailure("Database name should be at least 4 letters.", null)
-            .withConfigProperty(FirestoreConfig.NAME_DATABASE);
+          .withConfigProperty(FirestoreConfig.NAME_DATABASE);
       }
 
       // Maximum of 63 characters.
       if (databaseName.length() > 63) {
         collector.addFailure("Database name cannot be more than 63 characters.", null)
-            .withConfigProperty(FirestoreConfig.NAME_DATABASE);
+          .withConfigProperty(FirestoreConfig.NAME_DATABASE);
       }
 
       // Should not be a UUID.
       try {
         UUID.fromString(databaseName);
         collector.addFailure("Database name cannot contain a UUID.", null)
-            .withConfigProperty(FirestoreConfig.NAME_DATABASE);
+          .withConfigProperty(FirestoreConfig.NAME_DATABASE);
       } catch (IllegalArgumentException e) { }
     }
   }
@@ -362,7 +362,7 @@ public class FirestoreSourceConfig extends FirestoreConfig {
     List<Schema.Field> fields = schema.getFields();
     if (fields == null || fields.isEmpty()) {
       collector.addFailure("Source schema must contain at least one field", null)
-          .withConfigProperty(FirestoreSourceConstants.PROPERTY_SCHEMA);
+        .withConfigProperty(FirestoreSourceConstants.PROPERTY_SCHEMA);
     } else {
       fields.forEach(f -> validateFieldSchema(f.getName(), f.getSchema(), collector));
     }
@@ -382,10 +382,10 @@ public class FirestoreSourceConfig extends FirestoreConfig {
       // timestamps in CDAP are represented as LONG with TIMESTAMP_MICROS logical type
       if (logicalType != Schema.LogicalType.TIMESTAMP_MICROS) {
         collector.addFailure(String.format("Field '%s' is of unsupported type '%s'",
-            fieldName, fieldSchema.getDisplayName()),
-            "Supported types are: string, double, boolean, bytes, long, record, " +
-                "array, union and timestamp.")
-            .withOutputSchemaField(fieldName);
+          fieldName, fieldSchema.getDisplayName()),
+          "Supported types are: string, double, boolean, bytes, long, record, " +
+              "array, union and timestamp.")
+          .withOutputSchemaField(fieldName);
         return;
       }
     }
@@ -404,15 +404,15 @@ public class FirestoreSourceConfig extends FirestoreConfig {
       case ARRAY:
         if (fieldSchema.getComponentSchema() == null) {
           collector.addFailure(String.format("Field '%s' has no schema for array type", fieldName),
-              "Ensure array component has schema.").withOutputSchemaField(fieldName);
+            "Ensure array component has schema.").withOutputSchemaField(fieldName);
           return;
         }
 
         Schema componentSchema = fieldSchema.getComponentSchema();
         if (Schema.Type.ARRAY == componentSchema.getType()) {
           collector.addFailure(String.format("Field '%s' is of unsupported type array of array.", fieldName),
-              "Ensure the field has valid type.")
-              .withOutputSchemaField(fieldName);
+            "Ensure the field has valid type.")
+            .withOutputSchemaField(fieldName);
           return;
         }
         validateFieldSchema(fieldName, componentSchema, collector);
@@ -423,10 +423,10 @@ public class FirestoreSourceConfig extends FirestoreConfig {
         return;
       default:
         collector.addFailure(String.format("Field '%s' is of unsupported type '%s'",
-            fieldName, fieldSchema.getDisplayName()),
-            "Supported types are: string, double, boolean, bytes, long, record, " +
-                "array, union and timestamp.")
-            .withOutputSchemaField(fieldName);
+          fieldName, fieldSchema.getDisplayName()),
+          "Supported types are: string, double, boolean, bytes, long, record, " +
+              "array, union and timestamp.")
+          .withOutputSchemaField(fieldName);
     }
   }
 
@@ -435,10 +435,10 @@ public class FirestoreSourceConfig extends FirestoreConfig {
    */
   public boolean shouldConnect() {
     return !containsMacro(FirestoreSourceConstants.PROPERTY_SCHEMA) &&
-        !containsMacro(NAME_SERVICE_ACCOUNT_FILE_PATH) &&
-        !containsMacro(NAME_PROJECT) &&
-        tryGetProject() != null &&
-        !autoServiceAccountUnavailable();
+      !containsMacro(NAME_SERVICE_ACCOUNT_FILE_PATH) &&
+      !containsMacro(NAME_PROJECT) &&
+      tryGetProject() != null &&
+      !autoServiceAccountUnavailable();
   }
 
   private void validateDocumentLists(FailureCollector collector) {
@@ -457,15 +457,15 @@ public class FirestoreSourceConfig extends FirestoreConfig {
     if (mode == SourceQueryMode.BASIC) {
       if (pullDocumentList.isEmpty() && skipDocumentList.isEmpty()) {
         collector.addFailure("Either Documents to pull Or Documents to skip should be defined", null)
-            .withConfigProperty(FirestoreSourceConstants.PROPERTY_PULL_DOCUMENTS)
-            .withConfigProperty(FirestoreSourceConstants.PROPERTY_SKIP_DOCUMENTS);
+          .withConfigProperty(FirestoreSourceConstants.PROPERTY_PULL_DOCUMENTS)
+          .withConfigProperty(FirestoreSourceConstants.PROPERTY_SKIP_DOCUMENTS);
       }
     } else if (mode == SourceQueryMode.ADVANCED) {
       if (!pullDocumentList.isEmpty() || !skipDocumentList.isEmpty()) {
         collector.addFailure("In case of Mode=Advanced, Both Documents to pull Or Documents to skip " +
-            "must be empty", null)
-            .withConfigProperty(FirestoreSourceConstants.PROPERTY_PULL_DOCUMENTS)
-            .withConfigProperty(FirestoreSourceConstants.PROPERTY_SKIP_DOCUMENTS);
+          "must be empty", null)
+          .withConfigProperty(FirestoreSourceConstants.PROPERTY_PULL_DOCUMENTS)
+          .withConfigProperty(FirestoreSourceConstants.PROPERTY_SKIP_DOCUMENTS);
       }
     }
   }
@@ -479,13 +479,13 @@ public class FirestoreSourceConfig extends FirestoreConfig {
 
     if (mode == SourceQueryMode.BASIC && !Strings.isNullOrEmpty(getFilters())) {
       collector.addFailure("In case of Mode=Basic, Filters must be empty", null)
-          .withConfigProperty(FirestoreSourceConstants.PROPERTY_CUSTOM_QUERY);
+        .withConfigProperty(FirestoreSourceConstants.PROPERTY_CUSTOM_QUERY);
     } else if (mode == SourceQueryMode.ADVANCED) {
       List<FilterInfo> filters = getFiltersAsList(collector);
       collector.getOrThrowException();
       if (filters.isEmpty()) {
         collector.addFailure("In case of Mode=Advanced, Filters must contain at least one filter", null)
-            .withConfigProperty(FirestoreSourceConstants.PROPERTY_CUSTOM_QUERY);
+          .withConfigProperty(FirestoreSourceConstants.PROPERTY_CUSTOM_QUERY);
         return;
       }
     }
@@ -494,7 +494,7 @@ public class FirestoreSourceConfig extends FirestoreConfig {
   /**
    * Returns the empty list if filters contains a macro. Otherwise, the list
    * returned can never be empty.
-   * 
+   *
    * @param collector the FailureCollector
    * @return the this of FilterInfo
    */
@@ -508,7 +508,7 @@ public class FirestoreSourceConfig extends FirestoreConfig {
       return filterInfos;
     } catch (Exception e) {
       collector.addFailure(e.getMessage(), null)
-          .withConfigProperty(FirestoreSourceConstants.PROPERTY_CUSTOM_QUERY);
+        .withConfigProperty(FirestoreSourceConstants.PROPERTY_CUSTOM_QUERY);
       return Collections.emptyList();
     }
   }

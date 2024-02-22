@@ -52,14 +52,10 @@ public class FirestoreUtil {
       FirestoreOptions.Builder optionsBuilder = FirestoreOptions.newBuilder()
         .setProjectId(projectId)
         .setDatabaseId(databaseId);
-
-        LOG.debug("isServiceAccountFilePath={}, project={}, databaseId={}...",
-         isServiceAccountFilePath, projectId, databaseId);
-
-        final GoogleCredentials credential = getCredential(serviceAccount, isServiceAccountFilePath);
-
-        optionsBuilder.setCredentials(credential);
-
+      LOG.debug("isServiceAccountFilePath={}, project={}, databaseId={}...",
+        isServiceAccountFilePath, projectId, databaseId);
+      final GoogleCredentials credential = getCredential(serviceAccount, isServiceAccountFilePath);
+      optionsBuilder.setCredentials(credential);
       return optionsBuilder.build().getService();
     } catch (IOException e) {
       throw new FirestoreInitializationException("Unable to connect to Firestore", e);
@@ -73,7 +69,7 @@ public class FirestoreUtil {
     }
   }
 
-    /**
+  /**
    * Obtains Google Cloud Service Account credential from given JSON file.
    * If give path is null or empty, obtains application default credentials.
    *
@@ -83,8 +79,8 @@ public class FirestoreUtil {
    * @throws IOException if the credential cannot be created in the current environment
    */
   private static GoogleCredentials getCredential(@Nullable String serviceAccount,
-                                          @Nullable Boolean isServiceAccountFilePath) throws IOException {
-                                            GoogleCredentials credential;
+                                                @Nullable Boolean isServiceAccountFilePath) throws IOException {
+                                                GoogleCredentials credential;
     if (!Strings.isNullOrEmpty(serviceAccount)) {
       if (!isServiceAccountFilePath) {
         credential = loadCredentialFromStream(serviceAccount);
