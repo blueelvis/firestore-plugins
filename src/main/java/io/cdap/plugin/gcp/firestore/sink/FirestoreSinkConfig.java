@@ -30,11 +30,9 @@ import io.cdap.plugin.gcp.firestore.sink.util.FirestoreSinkConstants;
 import io.cdap.plugin.gcp.firestore.sink.util.SinkIdType;
 import io.cdap.plugin.gcp.firestore.util.FirestoreConstants;
 import io.cdap.plugin.gcp.firestore.util.FirestoreUtil;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
 import javax.annotation.Nullable;
 
 /**
@@ -169,7 +167,8 @@ public class FirestoreSinkConfig extends FirestoreConfig {
       return;
     }
     try {
-      Firestore db = FirestoreUtil.getFirestore(getServiceAccount(), isServiceAccountFilePath(), getProject(), getDatabaseName());
+      Firestore db = FirestoreUtil.getFirestore(getServiceAccount(), isServiceAccountFilePath(),
+       getProject(), getDatabaseName());
       db.close();
     } catch (Exception e) {
       collector.addFailure(e.getMessage(), "Ensure properties like project, service account " +
@@ -329,7 +328,7 @@ public class FirestoreSinkConfig extends FirestoreConfig {
         UUID.fromString(databaseName);
         collector.addFailure("Database name cannot contain a UUID.", null)
             .withConfigProperty(FirestoreConfig.NAME_DATABASE);
-      } catch (IllegalArgumentException e) {}
+      } catch (IllegalArgumentException e) { }
     }
   }
 

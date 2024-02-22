@@ -60,7 +60,8 @@ public class FirestoreSourceConfigTest {
     Assert.assertEquals(1, collector.getValidationFailures().size());
     Assert.assertEquals(FirestoreConfig.NAME_DATABASE, collector.getValidationFailures().get(0)
       .getCauses().get(0).getAttribute(CauseAttributes.STAGE_CONFIG));
-    Assert.assertEquals("Database name can only include letters, numbers and hyphen characters.", collector.getValidationFailures().get(0).getMessage());
+    Assert.assertEquals("Database name can only include letters, numbers and hyphen characters.",
+     collector.getValidationFailures().get(0).getMessage());
   }
 
   @Test
@@ -90,7 +91,8 @@ public class FirestoreSourceConfigTest {
     Assert.assertEquals(1, collector.getValidationFailures().size());
     Assert.assertEquals(FirestoreConfig.NAME_DATABASE, collector.getValidationFailures().get(0)
       .getCauses().get(0).getAttribute(CauseAttributes.STAGE_CONFIG));
-    Assert.assertEquals("Database name's first character can only be an alphabet.", collector.getValidationFailures().get(0).getMessage());
+    Assert.assertEquals("Database name's first character can only be an alphabet.",
+     collector.getValidationFailures().get(0).getMessage());
   }
 
   @Test
@@ -105,7 +107,8 @@ public class FirestoreSourceConfigTest {
     Assert.assertEquals(1, collector.getValidationFailures().size());
     Assert.assertEquals(FirestoreConfig.NAME_DATABASE, collector.getValidationFailures().get(0)
       .getCauses().get(0).getAttribute(CauseAttributes.STAGE_CONFIG));
-    Assert.assertEquals("Database name's last character can only be a letter or a number.", collector.getValidationFailures().get(0).getMessage());
+    Assert.assertEquals("Database name's last character can only be a letter or a number.",
+     collector.getValidationFailures().get(0).getMessage());
   }
 
   @Test
@@ -120,7 +123,8 @@ public class FirestoreSourceConfigTest {
     Assert.assertEquals(1, collector.getValidationFailures().size());
     Assert.assertEquals(FirestoreConfig.NAME_DATABASE, collector.getValidationFailures().get(0)
       .getCauses().get(0).getAttribute(CauseAttributes.STAGE_CONFIG));
-    Assert.assertEquals("Database name should be at least 4 letters.", collector.getValidationFailures().get(0).getMessage());
+    Assert.assertEquals("Database name should be at least 4 letters.",
+     collector.getValidationFailures().get(0).getMessage());
   }
 
   @Test
@@ -135,7 +139,8 @@ public class FirestoreSourceConfigTest {
     Assert.assertEquals(1, collector.getValidationFailures().size());
     Assert.assertEquals(FirestoreConfig.NAME_DATABASE, collector.getValidationFailures().get(0)
       .getCauses().get(0).getAttribute(CauseAttributes.STAGE_CONFIG));
-    Assert.assertEquals("Database name cannot be more than 63 characters.", collector.getValidationFailures().get(0).getMessage());
+    Assert.assertEquals("Database name cannot be more than 63 characters.",
+     collector.getValidationFailures().get(0).getMessage());
   }
 
   @Test
@@ -150,7 +155,8 @@ public class FirestoreSourceConfigTest {
     Assert.assertEquals(1, collector.getValidationFailures().size());
     Assert.assertEquals(FirestoreConfig.NAME_DATABASE, collector.getValidationFailures().get(0)
       .getCauses().get(0).getAttribute(CauseAttributes.STAGE_CONFIG));
-    Assert.assertEquals("Database name cannot contain a UUID.", collector.getValidationFailures().get(0).getMessage());
+    Assert.assertEquals("Database name cannot contain a UUID.",
+     collector.getValidationFailures().get(0).getMessage());
   }
 
   @Test

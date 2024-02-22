@@ -23,7 +23,6 @@ import io.cdap.cdap.api.data.batch.InputFormatProvider;
 import io.cdap.plugin.gcp.firestore.common.FirestoreConfig;
 import io.cdap.plugin.gcp.firestore.source.util.FirestoreSourceConstants;
 import io.cdap.plugin.gcp.firestore.util.FirestoreConstants;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -39,7 +38,10 @@ public class FirestoreInputFormatProvider implements InputFormatProvider {
   /**
    * Constructor for FirestoreInputFormatProvider object.
    * @param project the project of Firestore DB
-   * @param serviceAccountPath the service account path of Firestore DB
+   * @param databaseName Name of the Firestore database
+   * @param serviceAccountFilePath the service account path of Firestore DB
+   * @param serviceAccountJson JSON content of the service account credentials
+   * @param serviceAccountType The type of the Service account if it is stored in a filePath or JSON
    * @param collection the collection
    * @param mode there are two modes (basic and advanced)
    * @param pullDocuments the list of documents to pull
@@ -48,7 +50,8 @@ public class FirestoreInputFormatProvider implements InputFormatProvider {
    * @param fields the fields of collection
    */
   public FirestoreInputFormatProvider(
-      String project, String databaseName, @Nullable String serviceAccountFilePath, @Nullable String serviceAccountJson, String serviceAccountType, String collection, String mode,
+      String project, String databaseName, @Nullable String serviceAccountFilePath, @Nullable String serviceAccountJson,
+      String serviceAccountType, String collection, String mode,
       String pullDocuments, String skipDocuments, String filters, List<String> fields) {
     ImmutableMap.Builder<String, String> builder = new ImmutableMap.Builder<String, String>()
       .put(FirestoreConfig.NAME_PROJECT, project)

@@ -35,7 +35,6 @@ import io.cdap.plugin.gcp.firestore.util.FirestoreConstants;
 import org.apache.hadoop.io.NullWritable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -84,8 +83,8 @@ public class FirestoreSink extends BatchSink<StructuredRecord, NullWritable, Map
     String batchSize = Integer.toString(config.getBatchSize());
 
     batchSinkContext.addOutput(Output.of(config.getReferenceName(),
-      new FirestoreOutputFormatProvider(project, databaseName, serviceAccountFilePath, serviceAccountJson, serviceAccountType, collection, shouldAutoGenerateId,
-        batchSize)));
+      new FirestoreOutputFormatProvider(project, databaseName, serviceAccountFilePath, serviceAccountJson,
+       serviceAccountType, collection, shouldAutoGenerateId, batchSize)));
 
     LineageRecorder lineageRecorder = new LineageRecorder(batchSinkContext, config.getReferenceName());
     lineageRecorder.createExternalDataset(inputSchema);

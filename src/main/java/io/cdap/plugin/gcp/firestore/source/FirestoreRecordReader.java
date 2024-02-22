@@ -23,7 +23,6 @@ import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
-
 import io.cdap.plugin.gcp.firestore.common.FirestoreConfig;
 import io.cdap.plugin.gcp.firestore.exception.FirestoreInitializationException;
 import io.cdap.plugin.gcp.firestore.source.util.FilterInfo;
@@ -39,7 +38,6 @@ import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Iterator;
@@ -80,10 +78,10 @@ public class FirestoreRecordReader extends RecordReader<Object, QueryDocumentSna
     String serviceAccountType = config.get(FirestoreConfig.NAME_SERVICE_ACCOUNT_TYPE);
 
     String serviceAccount = "";
-    if(serviceAccountType.equalsIgnoreCase("FilePath")) {
+    if (serviceAccountType.equalsIgnoreCase("FilePath")) {
       serviceAccount = config.get(FirestoreConfig.NAME_SERVICE_ACCOUNT_FILE_PATH);
       isServiceAccountFilePath = true;
-    } else if(serviceAccountType.equalsIgnoreCase("json")) {
+    } else if (serviceAccountType.equalsIgnoreCase("json")) {
       serviceAccount = config.get(FirestoreConfig.NAME_SERVICE_ACCOUNT_JSON);
       isServiceAccountFilePath = false;
     } else {
@@ -91,7 +89,8 @@ public class FirestoreRecordReader extends RecordReader<Object, QueryDocumentSna
     }
 
 
-    LOG.debug("Initialize RecordReader(projectId={}, databaseId={}, collection={}, isServiceAccountFilePath={}, serviceAccountFilePath={}", projectId, databaseId, collection, isServiceAccountFilePath, serviceAccountFilePath);
+    LOG.debug("Initialize RecordReader(projectId={}, databaseId={}, collection={}, isServiceAccountFilePath={}, " +
+     "serviceAccountFilePath={}", projectId, databaseId, collection, isServiceAccountFilePath, serviceAccountFilePath);
 
     List<String> fields = Splitter.on(',').trimResults()
       .splitToList(config.get(FirestoreSourceConstants.PROPERTY_SCHEMA, ""));

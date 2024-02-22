@@ -34,16 +34,13 @@ import io.cdap.plugin.gcp.firestore.source.util.FirestoreSourceConstants;
 import io.cdap.plugin.gcp.firestore.source.util.SourceQueryMode;
 import io.cdap.plugin.gcp.firestore.util.FirestoreConstants;
 import io.cdap.plugin.gcp.firestore.util.FirestoreUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
 import javax.annotation.Nullable;
 
 /**
@@ -357,7 +354,7 @@ public class FirestoreSourceConfig extends FirestoreConfig {
         UUID.fromString(databaseName);
         collector.addFailure("Database name cannot contain a UUID.", null)
             .withConfigProperty(FirestoreConfig.NAME_DATABASE);
-      } catch (IllegalArgumentException e) {}
+      } catch (IllegalArgumentException e) { }
     }
   }
 

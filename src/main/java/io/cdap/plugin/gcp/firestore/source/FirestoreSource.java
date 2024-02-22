@@ -42,7 +42,6 @@ import io.cdap.plugin.gcp.firestore.util.FirestoreConstants;
 import io.cdap.plugin.gcp.firestore.util.FirestoreUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -122,7 +121,9 @@ public class FirestoreSource extends BatchSource<Object, QueryDocumentSnapshot, 
 
     List<String> fields = fetchSchemaFields(config.getSchema(collector));
 
-    context.setInput(Input.of(config.getReferenceName(), new FirestoreInputFormatProvider(project, databaseName, serviceAccountFilePath, serviceAccountJson, serviceAccountType, collection, mode, pullDocuments, skipDocuments, filters, fields)));
+    context.setInput(Input.of(config.getReferenceName(), new FirestoreInputFormatProvider(project, databaseName,
+    serviceAccountFilePath, serviceAccountJson, serviceAccountType, collection, mode, pullDocuments, skipDocuments,
+    filters, fields)));
 
     emitLineage(context);
   }
@@ -170,7 +171,8 @@ public class FirestoreSource extends BatchSource<Object, QueryDocumentSnapshot, 
 
     List<QueryDocumentSnapshot> items = null;
     try {
-      Firestore db = FirestoreUtil.getFirestore(config.getServiceAccount(), config.isServiceAccountFilePath(), config.getProject(), config.getDatabaseName());
+      Firestore db = FirestoreUtil.getFirestore(config.getServiceAccount(), config.isServiceAccountFilePath(),
+       config.getProject(), config.getDatabaseName());
       ApiFuture<QuerySnapshot> query = db.collection(config.getCollection()).limit(1).get();
       QuerySnapshot querySnapshot = query.get();
 

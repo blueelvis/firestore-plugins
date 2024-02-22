@@ -22,7 +22,6 @@ import com.google.common.base.Strings;
 import io.cdap.plugin.gcp.firestore.exception.FirestoreInitializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,7 +38,8 @@ public class FirestoreUtil {
   /**
    * Connects to Firestore instance using given credentials in JSON file, project ID and optional database Id.
    *
-   * @param serviceAccountFilePath path to credentials defined in JSON file
+   * @param serviceAccount Actual credentials in JSON or a path to the file containing them
+   * @param isServiceAccountFilePath If the serviceAccount parameter is a file path or not
    * @param projectId Google Cloud project ID
    * @param databaseId Cloud Firestore Database Id
    * @return Firestore service
@@ -53,7 +53,8 @@ public class FirestoreUtil {
         .setProjectId(projectId)
         .setDatabaseId(databaseId);
 
-        LOG.debug("isServiceAccountFilePath={}, project={}, databaseId={}...", isServiceAccountFilePath, projectId, databaseId);
+        LOG.debug("isServiceAccountFilePath={}, project={}, databaseId={}...",
+         isServiceAccountFilePath, projectId, databaseId);
 
         final GoogleCredentials credential = getCredential(serviceAccount, isServiceAccountFilePath);
 
