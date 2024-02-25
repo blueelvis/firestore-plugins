@@ -67,7 +67,7 @@ public class FirestoreRecordWriter extends RecordWriter<NullWritable, Map<String
     Boolean isServiceAccountFilePath = false;
     String serviceAccountFilePath = config.get(FirestoreConfig.NAME_SERVICE_ACCOUNT_FILE_PATH);
 
-    // Get Service Account whether JSON or FilePath
+    // Get Service Account Type whether JSON or FilePath
     String serviceAccountType = config.get(FirestoreConfig.NAME_SERVICE_ACCOUNT_TYPE);
 
     String serviceAccount = "";

@@ -62,7 +62,7 @@ public class FirestoreSourceConfig extends FirestoreConfig {
 
   @Name(FirestoreSourceConstants.PROPERTY_ID_ALIAS)
   @Description("Name of the field to set as the id field. This value is ignored if the `Include Document Id` is set to "
-  + "`false`. If no value is provided, `__id__` is used.")
+    + "`false`. If no value is provided, `__id__` is used.")
   @Macro
   @Nullable
   private String idAlias;
@@ -70,8 +70,8 @@ public class FirestoreSourceConfig extends FirestoreConfig {
   @Name(FirestoreSourceConstants.PROPERTY_QUERY_MODE)
   @Macro
   @Description("Mode of query. The mode can be one of two values: "
-  + "`Basic` - will allow user to specify documents to pull or skip, `Advanced` - will allow user to "
-  + "specify custom query.")
+    + "`Basic` - will allow user to specify documents to pull or skip, `Advanced` - will allow user to "
+    + "specify custom query.")
   private String queryMode;
 
   @Name(FirestoreSourceConstants.PROPERTY_PULL_DOCUMENTS)
@@ -90,12 +90,12 @@ public class FirestoreSourceConfig extends FirestoreConfig {
   @Macro
   @Nullable
   @Description("Specify the custom filter for fetching documents from Firestore Collection. " +
-  "Supported operators are, EqualTo, NumericEqualTo, LessThan, LessThanOrEqualTo, GreaterThan, " +
-  "GreaterThanOrEqualTo. A filter must specify the operator with field it should filter on as well the value. " +
-  "Filters are specified using syntax: \"value:operator(field)[,value:operator(field)]\". " +
-  "For example, 'CA:EqualTo(state),1000000:LessThan(population)' will apply two filters. " +
-  "The first will create a filter as state = 'CA'." +
-  "The second will create a filter as population < 1000000.")
+    "Supported operators are, EqualTo, NumericEqualTo, LessThan, LessThanOrEqualTo, GreaterThan, " +
+    "GreaterThanOrEqualTo. A filter must specify the operator with field it should filter on as well the value. " +
+    "Filters are specified using syntax: \"value:operator(field)[,value:operator(field)]\". " +
+    "For example, 'CA:EqualTo(state),1000000:LessThan(population)' will apply two filters. " +
+    "The first will create a filter as state = 'CA'." +
+    "The second will create a filter as population < 1000000.")
   private String filters;
 
   @Name(FirestoreSourceConstants.PROPERTY_SCHEMA)
@@ -158,7 +158,7 @@ public class FirestoreSourceConfig extends FirestoreConfig {
     }
 
     collector.addFailure("Unsupported query mode value: " + queryMode,
-    String.format("Supported modes are: %s", SourceQueryMode.getSupportedModes()))
+                         String.format("Supported modes are: %s", SourceQueryMode.getSupportedModes()))
       .withConfigProperty(FirestoreSourceConstants.PROPERTY_QUERY_MODE);
     collector.getOrThrowException();
     return null;
@@ -385,7 +385,7 @@ public class FirestoreSourceConfig extends FirestoreConfig {
         collector.addFailure(String.format("Field '%s' is of unsupported type '%s'",
           fieldName, fieldSchema.getDisplayName()),
           "Supported types are: string, double, boolean, bytes, long, record, " +
-              "array, union and timestamp.")
+            "array, union and timestamp.")
           .withOutputSchemaField(fieldName);
         return;
       }
@@ -426,7 +426,7 @@ public class FirestoreSourceConfig extends FirestoreConfig {
         collector.addFailure(String.format("Field '%s' is of unsupported type '%s'",
           fieldName, fieldSchema.getDisplayName()),
           "Supported types are: string, double, boolean, bytes, long, record, " +
-              "array, union and timestamp.")
+            "array, union and timestamp.")
           .withOutputSchemaField(fieldName);
     }
   }
@@ -444,9 +444,9 @@ public class FirestoreSourceConfig extends FirestoreConfig {
 
   private void validateDocumentLists(FailureCollector collector) {
     if (Strings.isNullOrEmpty(getPullDocuments()) ||
-        Strings.isNullOrEmpty(getSkipDocuments()) ||
-        containsMacro(FirestoreSourceConstants.PROPERTY_PULL_DOCUMENTS) ||
-        containsMacro(FirestoreSourceConstants.PROPERTY_SKIP_DOCUMENTS)) {
+      Strings.isNullOrEmpty(getSkipDocuments()) ||
+      containsMacro(FirestoreSourceConstants.PROPERTY_PULL_DOCUMENTS) ||
+      containsMacro(FirestoreSourceConstants.PROPERTY_SKIP_DOCUMENTS)) {
       return;
     }
 

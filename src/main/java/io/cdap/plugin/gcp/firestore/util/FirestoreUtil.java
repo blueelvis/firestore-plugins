@@ -80,8 +80,8 @@ public class FirestoreUtil {
    * @throws IOException if the credential cannot be created in the current environment
    */
   private static GoogleCredentials getCredential(@Nullable String serviceAccount,
-                                                @Nullable Boolean isServiceAccountFilePath) throws IOException {
-                                                GoogleCredentials credential;
+                                                 @Nullable Boolean isServiceAccountFilePath) throws IOException {
+    GoogleCredentials credential;
     if (!Strings.isNullOrEmpty(serviceAccount)) {
       if (!isServiceAccountFilePath) {
         credential = loadCredentialFromStream(serviceAccount);
