@@ -23,6 +23,7 @@ import io.cdap.cdap.api.data.batch.InputFormatProvider;
 import io.cdap.plugin.gcp.firestore.common.FirestoreConfig;
 import io.cdap.plugin.gcp.firestore.source.util.FirestoreSourceConstants;
 import io.cdap.plugin.gcp.firestore.util.FirestoreConstants;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;

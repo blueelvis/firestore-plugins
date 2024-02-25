@@ -22,6 +22,7 @@ import io.cdap.cdap.api.data.batch.OutputFormatProvider;
 import io.cdap.plugin.gcp.firestore.common.FirestoreConfig;
 import io.cdap.plugin.gcp.firestore.sink.util.FirestoreSinkConstants;
 import io.cdap.plugin.gcp.firestore.util.FirestoreConstants;
+
 import java.util.Map;
 import javax.annotation.Nullable;
 

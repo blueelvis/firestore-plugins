@@ -35,6 +35,7 @@ import io.cdap.plugin.gcp.firestore.util.FirestoreConstants;
 import org.apache.hadoop.io.NullWritable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.Map;
 import java.util.stream.Collectors;
 
